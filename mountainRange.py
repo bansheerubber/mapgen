@@ -64,15 +64,17 @@ class MountainRange:
 	def create_mountains(self):
 		if len(self.mountains) == 0:
 			last_radius = 0
-			next_radius = random.randint(math.floor((self.area_factor * 6 - self.area_factor * 1) * 100), 
-				math.floor((self.area_factor * 6 + self.area_factor * 1) * 100)) / 100
+			radius_scale = 7
+			radius_random = 1
+			next_radius = random.randint(math.floor((self.area_factor * radius_scale - self.area_factor * radius_random) * 100), 
+				math.floor((self.area_factor * radius_scale + self.area_factor * radius_random) * 100)) / 100
 			for point in self.iterate_boundary():
 				if self.__closest_mountain_distance(point) > next_radius:
 					mountain = Mountain(point, next_radius, len(self.mountains))
 					self.mountains.append(mountain)
 					last_radius = next_radius
-					next_radius = random.randint(math.floor((self.area_factor * 6 - self.area_factor * 1) * 100), 
-						math.floor((self.area_factor * 6 + self.area_factor * 1) * 100)) / 100
+					next_radius = random.randint(math.floor((self.area_factor * radius_scale - self.area_factor * radius_random) * 100), 
+						math.floor((self.area_factor * radius_scale + self.area_factor * radius_random) * 100)) / 100
 	
 	def place_mountains(self, hex_map):
 		for mountain in self.mountains:

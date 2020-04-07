@@ -1,4 +1,5 @@
 import math
+import zlib
 from PIL import Image
 
 class HexMap:
@@ -47,17 +48,23 @@ class HexMap:
 		self.image.show()
 		self.image.save(filename)
 
-	def save_egg(self, filename):
-		file = open(filename, "wb")
+	def save_egg(self, filename, compression_level=10):
 		# writing map size to file
-		file.write(bytes([10]))
-		file.write(math.floor(self.world_size[0] / self.reduction_factor).to_bytes(4, "big"))
-		file.write(math.floor(self.world_size[1] / self.reduction_factor).to_bytes(4, "big"))
+		output = []
+		output.extend(math.floor(self.world_size[0] / self.reduction_factor).to_bytes(4, "big"))
+		output.extend(math.floor(self.world_size[1] / self.reduction_factor).to_bytes(4, "big"))
 		for y in range(0, math.floor(self.world_size[1] / self.reduction_factor)):
 			for x in range(0, math.floor(self.world_size[1] / self.reduction_factor)):
 				coord = (x, y)
 				hex_id = 0
 				if coord in self.hexes:
 					hex_id = self.hexes[(x, y)]
-				file.write(bytes([hex_id]))
+				output.extend(bytes([hex_id]))
+
+		file = open(filename, "wb")
+		file.write(bytes([compression_level]))
+		if compression_level == 10:
+			file.write(bytes(output))
+		else:
+			compressed = file.write(zlib.compress(bytes(output), compression_level))
 		file.close()

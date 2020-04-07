@@ -26,10 +26,7 @@ class RegionSet:
 	def __clean_regions(self):
 		for region in self.regions:
 			if region.polygon.is_valid == False:
-				for neighbor in region.neighbors:
-					neighbor.neighbors.remove(region)
-				self.regions.remove(region)
-				print(f"had to remove {region.index}")
+				region.polygon = region.polygon.buffer(0)
 
 	def complete_intersections(self):
 		self.__clean_regions()
@@ -40,6 +37,13 @@ class RegionSet:
 					region.special_intersect(neighbor)
 				else:
 					neighbor.special_intersect(region)
+				
+				# fixing polygons
+				if region.polygon.is_valid == False:
+					region.polygon = region.polygon.buffer(0)
+				
+				if neighbor.polygon.is_valid == False:
+					neighbor.polygon = neighbor.polygon.buffer(0)
 		
 		self.identify_neighbors() # we have to reset our neighbors list, so it reflects the actual map
 	

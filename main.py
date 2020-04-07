@@ -28,8 +28,10 @@ r.create_mountain_ranges()
 plt.axis((-size_x / 2, size_x / 2, -size_y / 2, size_y / 2))
 
 m.rasterize()
-m.create_image("map.png")
-m.save_egg("map.egg")
+# m.create_image("map.png")
+m.save_egg("map.egg", 9)
+
+plt.savefig("graph.png")
 
 # image.show()
 # plt.show()
